@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Authors>Erast Korolev</Authors>
     <Copyright>Erast Korolev</Copyright>
@@ -16,7 +16,7 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutputPath>..\lib\</OutputPath>
-    <DocumentationFile>..\lib\netcoreapp2.0\MailRuCloudClient.xml</DocumentationFile>
+    <DocumentationFile>..\lib\netstandard2.0\MailRuCloudClient.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
