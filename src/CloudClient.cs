@@ -745,6 +745,12 @@ namespace MailRuCloudClient
             var parentPath = this.GetParentCloudPath(sourceFullPath);
             var itemName = sourceFullPath.TrimEnd('/').Split(new[] { '/' }).Last();
             var parentFolderItems = await this.GetFolder(parentPath);
+            if (parentFolderItems == null)
+            {
+                throw new CloudClientException(
+                    "Source item does not exists in the cloud.", nameof(sourceFullPath), ErrorCode.PathNotExists);
+            }
+
             var hasFolder = typeof(T) == typeof(Folder);
             T item = null;
             if ((hasFolder && (item = (T)(object)parentFolderItems.Folders.FirstOrDefault(x => x.Name == itemName)) == null)

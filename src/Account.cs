@@ -6,6 +6,7 @@
 
 namespace MailRuCloudClient
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
@@ -231,9 +232,16 @@ namespace MailRuCloudClient
         /// <returns>The tariffs list.</returns>
         private async Task<List<Rate>> GetRates()
         {
-            await this.CheckAuthorization(false);
-            var responseStr = await this.HttpClient.GetStringAsync(Urls.Rates, this.Email, this.AuthToken);
-            return responseStr.Deserialize<Rates>().Items.ToList();
+            try
+            {
+                await this.CheckAuthorization(false);
+                var responseStr = await this.HttpClient.GetStringAsync(Urls.Rates, this.Email, this.AuthToken);
+                return responseStr.Deserialize<Rates>().Items.ToList();
+            }
+            catch
+            {
+                return new List<Rate>();
+            }
         }
     }
 }
