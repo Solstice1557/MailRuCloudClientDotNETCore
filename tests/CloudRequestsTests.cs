@@ -18,11 +18,11 @@
     [TestFixture]
     public class CloudRequestsTests
     {
-        public const string Login = "tencryption@mail.ru";
-        public const string Password = "TFh4^cq:b'wJRoUk&Z=i";
+        public const string Login = "";
+        public const string Password = "";
 
-        private Account account = null;
-        private CloudClient client = null;
+        private Account account;
+        private CloudClient client;
 
         private const string TestFolderName = "new folder"; // In Cloud
         private const string TestFolderPath = "/" + TestFolderName; // In Cloud
