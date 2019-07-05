@@ -13,6 +13,7 @@ namespace MailRuCloudClient
     using System.Linq;
     using System.Net;
     using System.Net.Http;
+    using System.Security;
     using System.Text.RegularExpressions;
     using System.Threading;
     using System.Threading.Tasks;
@@ -58,7 +59,7 @@ namespace MailRuCloudClient
         /// </summary>
         /// <param name="email">Login name as the email.</param>
         /// <param name="password">Password, associated with this email.</param>
-        public CloudClient(string email, string password)
+        public CloudClient(string email, SecureString password)
         {
             this.Account = new Account(email, password);
         }

@@ -12,12 +12,16 @@ namespace MailRuCloudClient
     using System.Linq;
     using System.Net;
     using System.Net.Http;
+    using System.Runtime.InteropServices;
+    using System.Security;
     using System.Threading.Tasks;
-    using Exceptions;
+    
     using MailRuCloudClient.Data;
     using MailRuCloudClient.Data.Rates;
+    using MailRuCloudClient.Exceptions;
     using MailRuCloudClient.Static;
     using MailRuCloudClient.Static.Helpers;
+
     using Newtonsoft.Json.Linq;
 
     /// <summary>
@@ -30,36 +34,26 @@ namespace MailRuCloudClient
         /// </summary>
         private CookieContainer cookies = new CookieContainer();
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Account" /> class.
-        /// </summary>
-        public Account()
-        {
-        }
+        private readonly SecureString password;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Account" /> class.
         /// </summary>
         /// <param name="email">Login as email.</param>
         /// <param name="password">Password related with this login.</param>
-        public Account(string email, string password)
+        public Account(string email, SecureString password)
         {
             Debug.Assert(!string.IsNullOrEmpty(email), "Is null or empty.");
-            Debug.Assert(!string.IsNullOrEmpty(password), "Is null or empty.");
+            Debug.Assert(password != null && password.Length > 0, "Is null or empty.");
 
             this.Email = email;
-            this.Password = password;
+            this.password = password;
         }
 
         /// <summary>
         /// Gets or sets login as email.
         /// </summary>
-        public string Email { get; set; }
-
-        /// <summary>
-        /// Gets or sets password.
-        /// </summary>
-        public string Password { get; set; }
+        public string Email { get; }
 
         /// <summary>
         /// Gets the list of activated tariffs for account. Relogin the account to recalculation connected tariffs.
@@ -81,10 +75,7 @@ namespace MailRuCloudClient
         /// </summary>
         internal CookieContainer Cookies
         {
-            get
-            {
-                return this.cookies;
-            }
+            get => this.cookies;
 
             set
             {
@@ -115,7 +106,7 @@ namespace MailRuCloudClient
             {
                 new KeyValuePair<string, string>("Login", this.Email),
                 new KeyValuePair<string, string>("Domain", "mail.ru"),
-                new KeyValuePair<string, string>("Password", this.Password)
+                new KeyValuePair<string, string>("Password", SecureStringToString(this.password))
             });
 
             var responseMessage = await this.HttpClient.PostAsync(Urls.Auth, content);
@@ -178,9 +169,9 @@ namespace MailRuCloudClient
                 throw new NotAuthorizedException("Is not defined.", nameof(this.Login));
             }
 
-            if (string.IsNullOrEmpty(this.Password))
+            if (this.password.Length == 0)
             {
-                throw new NotAuthorizedException("Is not defined.", nameof(this.Password));
+                throw new NotAuthorizedException("Is not defined.", nameof(this.password));
             }
 
             if (!baseCheckout)
@@ -224,6 +215,20 @@ namespace MailRuCloudClient
                 Total = new Size((long)responseParsed["bytes_total"] * 1024L * 1024L),
                 Used = new Size((long)responseParsed["bytes_used"] * 1024L * 1024L)
             };
+        }
+
+        private static string SecureStringToString(SecureString value)
+        {
+            var valuePtr = IntPtr.Zero;
+            try
+            {
+                valuePtr = Marshal.SecureStringToGlobalAllocUnicode(value);
+                return Marshal.PtrToStringUni(valuePtr);
+            }
+            finally
+            {
+                Marshal.ZeroFreeGlobalAllocUnicode(valuePtr);
+            }
         }
 
         /// <summary>

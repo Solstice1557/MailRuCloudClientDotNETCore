@@ -5,6 +5,7 @@
     using System.IO;
     using System.Linq;
     using System.Net.Http;
+    using System.Security;
     using System.Threading.Tasks;
 
     using MailRuCloudClient;
@@ -395,9 +396,15 @@
         {
             if (this.account == null)
             {
-                this.account = new Account(Login, Password);
-                Assert.True(await this.account.Login());
+                var pass = new SecureString();
+                foreach (var c in Password)
+                {
+                    pass.AppendChar(c);
+                }
 
+                pass.MakeReadOnly();
+                this.account = new Account(Login, pass);
+                Assert.True(await this.account.Login());
                 this.client = new CloudClient(this.account);
             }
         }

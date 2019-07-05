@@ -14,12 +14,7 @@
             Cookie container for account.
             </summary>
         </member>
-        <member name="M:MailRuCloudClient.Account.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:MailRuCloudClient.Account" /> class.
-            </summary>
-        </member>
-        <member name="M:MailRuCloudClient.Account.#ctor(System.String,System.String)">
+        <member name="M:MailRuCloudClient.Account.#ctor(System.String,System.Security.SecureString)">
             <summary>
             Initializes a new instance of the <see cref="T:MailRuCloudClient.Account" /> class.
             </summary>
@@ -29,11 +24,6 @@
         <member name="P:MailRuCloudClient.Account.Email">
             <summary>
             Gets or sets login as email.
-            </summary>
-        </member>
-        <member name="P:MailRuCloudClient.Account.Password">
-            <summary>
-            Gets or sets password.
             </summary>
         </member>
         <member name="P:MailRuCloudClient.Account.ActivatedTariffs">
@@ -122,7 +112,7 @@
             </summary>
             <param name="account">Cloud account.</param>
         </member>
-        <member name="M:MailRuCloudClient.CloudClient.#ctor(System.String,System.String)">
+        <member name="M:MailRuCloudClient.CloudClient.#ctor(System.String,System.Security.SecureString)">
             <summary>
             Initializes a new instance of the <see cref="T:MailRuCloudClient.CloudClient" /> class. Do not forget to authorize account.
             </summary>
